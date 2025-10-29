@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import JustValidate from "just-validate";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function FormLogin() {
+  const router = useRouter();
+
   useEffect(() => {
     const validator = new JustValidate("#loginForm");
 
@@ -43,7 +46,13 @@ export default function FormLogin() {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            if (data.code == "error") {
+              alert(data.message);
+            }
+
+            if (data.code == "success") {
+              router.push("/");
+            }
           });
       });
   }, []);
