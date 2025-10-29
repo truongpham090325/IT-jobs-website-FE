@@ -39,6 +39,7 @@ export default function FormLogin() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataFinal),
+          credentials: "include", // Quan trọng: giữ cookie
         })
           .then((res) => res.json())
           .then((data) => {
