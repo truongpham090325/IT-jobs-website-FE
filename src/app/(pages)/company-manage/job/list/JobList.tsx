@@ -8,9 +8,11 @@ import { FaBriefcase, FaLocationDot, FaUserTie } from "react-icons/fa6";
 /* eslint-disable @next/next/no-img-element */
 export const JobList = () => {
   const [jobList, setJobList] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/list`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/list?page=${page}`, {
       method: "GET",
       credentials: "include", // Gửi kèm cookie
     })
@@ -18,9 +20,15 @@ export const JobList = () => {
       .then((data) => {
         if (data.code == "success") {
           setJobList(data.jobs);
+          setTotalPage(data.totalPage);
         }
       });
-  }, []);
+  }, [page]);
+
+  const handlePagination = (event: any) => {
+    const value = event.target.value;
+    setPage(value);
+  };
 
   return (
     <>
@@ -112,10 +120,15 @@ export const JobList = () => {
         <select
           name=""
           className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042]"
+          onChange={handlePagination}
         >
-          <option value="">Trang 1</option>
-          <option value="">Trang 2</option>
-          <option value="">Trang 3</option>
+          {Array(totalPage)
+            .fill("")
+            .map((item, index) => (
+              <option key={index} value={index + 1}>
+                Trang {index + 1}
+              </option>
+            ))}
         </select>
       </div>
     </>
