@@ -4,12 +4,14 @@ import { positionList, workingFormList } from "@/config/variable";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBriefcase, FaLocationDot, FaUserTie } from "react-icons/fa6";
+import { toast, Toaster } from "sonner";
 
 /* eslint-disable @next/next/no-img-element */
 export const JobList = () => {
   const [jobList, setJobList] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [countDelete, setCountDelete] = useState(0);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/list?page=${page}`, {
@@ -23,15 +25,34 @@ export const JobList = () => {
           setTotalPage(data.totalPage);
         }
       });
-  }, [page]);
+  }, [page, countDelete]);
 
   const handlePagination = (event: any) => {
     const value = event.target.value;
     setPage(value);
   };
 
+  const handleDelete = (id: string) => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/delete/${id}`, {
+      method: "DELETE",
+      credentials: "include", // Gửi kèm cookie
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.code == "error") {
+          toast.error(data.message);
+        }
+
+        if (data.code == "success") {
+          toast.success(data.message);
+          setCountDelete(countDelete + 1);
+        }
+      });
+  };
+
   return (
     <>
+      <Toaster richColors position="top-right" />
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
         {jobList.map((item) => {
           const position = positionList.find(
@@ -104,12 +125,12 @@ export const JobList = () => {
                 >
                   Sửa
                 </Link>
-                <Link
-                  href="#"
+                <button
                   className="bg-[#FF0000] rounded-[4px] font-[400] text-[14px] text-white inline-block py-[8px] px-[20px]"
+                  onClick={() => handleDelete(item.id)}
                 >
                   Xóa
-                </Link>
+                </button>
               </div>
             </div>
           );
