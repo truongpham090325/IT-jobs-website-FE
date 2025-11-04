@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Editor } from "@tinymce/tinymce-react";
 
-export const EditorMCE = (props: { editorRef: any; value: string }) => {
-  const { editorRef, value } = props;
+export const EditorMCE = (props: {
+  editorRef: any;
+  value: string;
+  id?: string;
+}) => {
+  const { editorRef, value, id = "" } = props;
 
   return (
     <>
@@ -10,6 +14,7 @@ export const EditorMCE = (props: { editorRef: any; value: string }) => {
         apiKey={process.env.NEXT_PUBLIC_API_TINYMCE}
         onInit={(_evt, editor) => (editorRef.current = editor)}
         initialValue={value}
+        id={id}
         init={{
           height: 500,
           plugins: [
