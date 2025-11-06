@@ -17,23 +17,19 @@ export const HeaderMenu = (props: { showMenu: boolean }) => {
           children: [
             {
               name: "HTML5",
-              link: "/search?language=HTML5",
+              link: "/search?language=HTML",
             },
             {
               name: "CSS3",
-              link: "/search?language=CSS3",
+              link: "/search?language=CSS",
             },
             {
               name: "Javascript",
-              link: "/search?language=Javascript",
+              link: "/search?language=JS",
             },
             {
-              name: "NodeJS",
-              link: "/search?language=NodeJS",
-            },
-            {
-              name: "ReactJS",
-              link: "/search?language=ReactJS",
+              name: "Java",
+              link: "/search?language=Java",
             },
           ],
         },
