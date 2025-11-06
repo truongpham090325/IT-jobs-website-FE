@@ -15,10 +15,13 @@ export const SearchContainer = () => {
   const position = searchParams.get("position") || "";
   const workingFrom = searchParams.get("workingFrom") || "";
   const [jobList, setJobList] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [totalRecord, setTotalRecord] = useState(0);
 
   useEffect(() => {
     fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}&workingFrom=${workingFrom}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}&workingFrom=${workingFrom}&page=${page}`,
       {
         method: "GET",
       }
@@ -26,8 +29,10 @@ export const SearchContainer = () => {
       .then((res) => res.json())
       .then((data) => {
         setJobList(data.jobs);
+        setTotalPage(data.totalPage);
+        setTotalRecord(data.totalRecord);
       });
-  }, [language, city, company, keyword, position, workingFrom]);
+  }, [language, city, company, keyword, position, workingFrom, page]);
 
   const handleFilterStatus = (event: any) => {
     const value = event.target.value;
@@ -53,10 +58,15 @@ export const SearchContainer = () => {
     router.push(`?${params.toString()}`);
   };
 
+  const handlePagination = (event: any) => {
+    const value = event.target.value;
+    setPage(value);
+  };
+
   return (
     <>
       <h2 className="font-[700] text-[28px] text-[#121212] mb-[30px]">
-        {jobList.length} việc làm{" "}
+        {totalRecord} việc làm{" "}
         <span className="text-[#0088FF]">
           {language} {city} {company} {keyword}
         </span>
@@ -106,10 +116,15 @@ export const SearchContainer = () => {
         <select
           name=""
           className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042] outline-none"
+          onChange={handlePagination}
         >
-          <option value="">Trang 1</option>
-          <option value="">Trang 2</option>
-          <option value="">Trang 3</option>
+          {Array(totalPage)
+            .fill("")
+            .map((item, index) => (
+              <option key={index} value={index + 1}>
+                Trang {index + 1}
+              </option>
+            ))}
         </select>
       </div>
     </>
