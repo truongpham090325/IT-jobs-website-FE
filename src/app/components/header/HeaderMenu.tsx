@@ -42,8 +42,8 @@ export const HeaderMenu = (props: { showMenu: boolean }) => {
               link: "/search?city=Hà Nội",
             },
             {
-              name: "Thành phố Hồ Chí Minh",
-              link: "/search?city=Thành phố Hồ Chí Minh",
+              name: "Đà Nẵng",
+              link: "/search?city=Đà Nẵng",
             },
             {
               name: "Hải Phòng",
