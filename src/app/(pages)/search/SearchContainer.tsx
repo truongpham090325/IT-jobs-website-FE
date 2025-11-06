@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { CardJobItem } from "@/app/components/card/CardJobItem";
-import { positionList } from "@/config/variable";
+import { positionList, workingFormList } from "@/config/variable";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,21 @@ export const SearchContainer = () => {
   const company = searchParams.get("company") || "";
   const keyword = searchParams.get("keyword") || "";
   const position = searchParams.get("position") || "";
+  const workingFrom = searchParams.get("workingFrom") || "";
   const [jobList, setJobList] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}&workingFrom=${workingFrom}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setJobList(data.jobs);
+      });
+  }, [language, city, company, keyword, position, workingFrom]);
 
   const handleFilterStatus = (event: any) => {
     const value = event.target.value;
@@ -27,18 +41,17 @@ export const SearchContainer = () => {
     router.push(`?${params.toString()}`);
   };
 
-  useEffect(() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}`,
-      {
-        method: "GET",
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setJobList(data.jobs);
-      });
-  }, [language, city, company, keyword, position]);
+  const handleFilterWorkingFrom = (event: any) => {
+    const value = event.target.value;
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("workingFrom", value);
+    } else {
+      params.delete("workingFrom");
+    }
+    router.push(`?${params.toString()}`);
+  };
 
   return (
     <>
@@ -71,11 +84,15 @@ export const SearchContainer = () => {
         <select
           name=""
           className="border border-[#DEDEDE] rounded-[20px] h-[36px] px-[18px] font-[400] text-[16px] text-[#414042]"
+          onChange={handleFilterWorkingFrom}
+          defaultValue={workingFrom}
         >
           <option value="">Hình thức làm việc</option>
-          <option value="">Tại văn phòng</option>
-          <option value="">Làm từ xa</option>
-          <option value="">Linh hoạt</option>
+          {workingFormList.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
         </select>
       </div>
 
