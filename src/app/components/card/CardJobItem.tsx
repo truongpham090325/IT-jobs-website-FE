@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
+import { positionList, workingFormList } from "@/config/variable";
 import Link from "next/link";
 import { FaBriefcase, FaLocationDot, FaUserTie } from "react-icons/fa6";
 
 export const CardJobItem = (props: { item: any }) => {
   const { item } = props;
+
+  const position = positionList.find((pos) => pos.value == item.position);
+  const workingFrom = workingFormList.find(
+    (work) => work.value == item.workingFrom
+  );
 
   return (
     <>
@@ -43,10 +49,10 @@ export const CardJobItem = (props: { item: any }) => {
           {item.salaryMax.toLocaleString("vi-VN")}$
         </div>
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
-          <FaUserTie className="text-[16px]" /> Fresher
+          <FaUserTie className="text-[16px]" /> {position?.label}
         </div>
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
-          <FaBriefcase className="text-[16px]" /> Tại văn phòng
+          <FaBriefcase className="text-[16px]" /> {workingFrom?.label}
         </div>
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
           <FaLocationDot className="text-[16px]" /> {item.cityName}
